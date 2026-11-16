@@ -33,7 +33,8 @@ h1 {
   text-align: center;
 }
 
-.start-button {
+.start-button,
+.level-select {
   display: inline-block;
   height: 38px;
   padding: 0 30px;
@@ -47,11 +48,17 @@ h1 {
   cursor: pointer;
 }
 
-.start-button:hover {
+.start-button:hover,
+.level-select:hover {
   color: greenyellow;
   font-size: 18px;
   border-color: greenyellow;
   transform: rotate(5deg);
+}
+
+.level-select option {
+  color: yellow;
+  background-color: #000;
 }
 
 .status {
