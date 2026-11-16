@@ -7,6 +7,7 @@
  const statusSpan = document.querySelector(".js-status"); // Use querySelector() to get the status element
  const heading = document.querySelector(".js-heading"); // Use querySelector() to get the heading element
  const padContainer = document.querySelector(".js-pad-container"); // Use querySelector() to get the heading element
+ const levelSelect = document.querySelector(".js-level-select"); // Use querySelector to get the level select element
 
 /**
  * VARIABLES
