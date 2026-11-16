@@ -122,9 +122,10 @@ function padHandler(event) {
  if (!color) return;
 
  const pad = pads.find((pad) => pad.color === color);
+ pad.selector.classList.add("activated");
  setTimeout(() => {
   pad.selector.classList.remove("activated");
-  }, 500);
+  }, 250);
  pad.sound.play();
  checkPress(color);
  return color;
@@ -326,7 +327,7 @@ function playHumanTurn() {
 function checkPress(color) {
  playerSequence.push(color);
  const index = playerSequence.length - 1;
- const remainingPresses = computersequence.length - playerSequence.length;
+ const remainingPresses = computerSequence.length - playerSequence.length;
  setText(statusSpan, `Player's turn: ${remainingPresses} presses left`);
 
  if (computerSequence[index] !== playerSequence[index]) {
@@ -359,7 +360,7 @@ function checkRound() {
  if (playerSequence.length === maxRoundCount) {
   resetGame("You won! Congratulations!");
  } else {
-  rountCount++;
+  roundCount++;
   playerSequence = [];
   setText(statusSpan, "Nice, Keep going!");
   setTimeout(() => playComputerTurn(), 1000);
