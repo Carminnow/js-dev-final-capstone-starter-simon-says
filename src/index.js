@@ -62,10 +62,13 @@ let roundCount = 0; // track the number of rounds that have been played so far
  */
 
 padContainer.addEventListener("click", padHandler);
+startButton.addEventListener("click", startButtonHandler);
+
+
+
 /**
  * EVENT HANDLERS
  */
-startButton.addEventListener("click", startButtonHandler);
 
 
 /**
@@ -160,6 +163,7 @@ function setLevel(level = 1) {
    return 31;
   default:
    return "Please enter level 1, 2, 3, or 4."
+ }
 }
 
 /**
@@ -178,16 +182,17 @@ function setLevel(level = 1) {
  * getRandomItem([1, 2, 3, 4]) //> returns 1
  */
 function getRandomItem(collection) {
-  // if (collection.length === 0) return null;
-  // const randomIndex = Math.floor(Math.random() * collection.length);
-  // return collection[randomIndex];
+   if (collection.length === 0) return null;
+   const randomIndex = Math.floor(Math.random() * collection.length);
+   return collection[randomIndex];
+ 
 }
 
 /**
  * Sets the status text of a given HTML element with a given a message
  */
 function setText(element, text) {
-  // TODO: Write your code here.
+  element.textContent = text;
   return element;
 }
 
@@ -205,7 +210,16 @@ function setText(element, text) {
  */
 
 function activatePad(color) {
-  // TODO: Write your code here.
+ //set variable
+const pad = pads.find((pad) => pad.color === color);
+ //light up the color pad
+ pad.selector.classList.add("activated");
+ //play the sound
+ pad.sound.play();
+ //keep the light on for 500ms for the user to see
+ setTimeout(() => {
+  pad.selector.classList.remove("activated");
+ }, 500);
 }
 
 /**
@@ -223,7 +237,9 @@ function activatePad(color) {
  */
 
 function activatePads(sequence) {
-  // TODO: Write your code here.
+ sequence.forEach((color, index) => {
+  setTimeout(() => activatePad(color), (index + 1) * 600);
+ });
 }
 
 /**
@@ -250,8 +266,17 @@ function activatePads(sequence) {
  * sequence.
  */
  function playComputerTurn() {
-  // TODO: Write your code here.
+//locking the pads
+  padContainer.classList.add("unclickable");
+//add text to alert the player of what's happening  
+  setText(statusSpan, "The computer's turn...");
+  setText(heading, `Round ${roundCount} of ${maxRoundCount}`);
 
+//random color grab
+  const color = getRandomItem(pads).color;
+  computerSequence.push(color);
+  activatePads(computerSequence);
+  
   setTimeout(() => playHumanTurn(roundCount), roundCount * 600 + 1000); // 5
 }
 
