@@ -86,12 +86,16 @@ startButton.addEventListener("click", startButtonHandler);
  *
  */
 function startButtonHandler() {
- //setting the variable for how many rounds based on the level of the game. 
- maxRoundCount = setLevel();
+
+ 
+ //select the level the player picked, or fall back to the default level
+ const level = Number(levelSelect.value);
+ maxRoundCount = level ? setLevel(level) : setLevel();
  roundCount++;
 
  //Hide start button and show status
  startButton.classList.add("hidden");
+ levelSelect.classList.add("hidden");
  statusSpan.classList.remove("hidden");
 
  //the game starts with the computer's turn. 
@@ -385,6 +389,7 @@ function resetGame(text) {
   alert(text);
   setText(heading, "Simon Says");
   startButton.classList.remove("hidden");
+  levelSelect.classList.remove("hidden");
   statusSpan.classList.add("hidden");
   padContainer.classList.add("unclickable");
 }
