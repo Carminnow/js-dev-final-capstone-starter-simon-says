@@ -35,25 +35,25 @@ let roundCount = 0; // track the number of rounds that have been played so far
   {
     color: "red", // the name of the pad
     selector: document.querySelector(".js-pad-red"), //the <div> on the page
-    sound: new Audio("../assets/simon-says-sound-1.mp3"), // the tone it plays 
+    sound: new Audio("./assets/simon-says-sound-1.mp3"), // the tone it plays 
   },
   //Green
     {
     color: "green", // the name of the pad
     selector: document.querySelector(".js-pad-green"), //the <div> on the page
-    sound: new Audio("../assets/simon-says-sound-2.mp3"), // the tone it plays 
+    sound: new Audio("./assets/simon-says-sound-2.mp3"), // the tone it plays 
   },
   //Blue
     {
     color: "blue", // the name of the pad
     selector: document.querySelector(".js-pad-blue"), //the <div> on the page
-    sound: new Audio("../assets/simon-says-sound-3.mp3"), // the tone it plays 
+    sound: new Audio("./assets/simon-says-sound-3.mp3"), // the tone it plays 
   },
   //Yellow
     {
     color: "yellow", // the name of the pad
     selector: document.querySelector(".js-pad-yellow"), //the <div> on the page
-    sound: new Audio("../assets/simon-says-sound-4.mp3"), // the tone it plays 
+    sound: new Audio("./assets/simon-says-sound-4.mp3"), // the tone it plays 
   },
 ];
 
