@@ -16,6 +16,10 @@ let computerSequence = []; // track the computer-generated sequence of pad press
 let playerSequence = []; // track the player-generated sequence of pad presses
 let maxRoundCount = 0; // the max number of rounds, varies with the chosen level
 let roundCount = 0; // track the number of rounds that have been played so far
+const backgroundMusic = new Audio("./assets/background-music.mp3");
+backgroundMusic.loop = true;
+backgroundMusic.volume = .25;
+
 
 /**
  *
@@ -93,7 +97,8 @@ function startButtonHandler() {
  const level = Number(levelSelect.value);
  maxRoundCount = level ? setLevel(level) : setLevel();
  roundCount++;
-
+ backgroundMusic.currentTime = 0;
+ backgroundMusic.play();
  //Hide start button and show status
  startButton.classList.add("hidden");
  levelSelect.classList.add("hidden");
@@ -386,9 +391,12 @@ function resetGame(text) {
   computerSequence = [];
   playerSequence = [];
   roundCount = 0;
-  //Uncomment the code below:
-  alert(text);
+  backgroundMusic.pause();
+ //Uncomment the code below:
+ 
+ alert(text);
   setText(heading, "Simon Says");
+ 
   startButton.classList.remove("hidden");
   levelSelect.classList.remove("hidden");
   statusSpan.classList.add("hidden");
