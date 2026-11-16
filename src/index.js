@@ -4,7 +4,6 @@
  */
 
  const startButton = document.querySelector(".js-start-button");
- // TODO: Add the missing query selectors:
  const statusSpan = document.querySelector(".js-status"); // Use querySelector() to get the status element
  const heading = document.querySelector(".js-heading"); // Use querySelector() to get the heading element
  const padContainer = document.querySelector(".js-pad-container"); // Use querySelector() to get the heading element
@@ -63,11 +62,11 @@ let roundCount = 0; // track the number of rounds that have been played so far
  */
 
 padContainer.addEventListener("click", padHandler);
-// TODO: Add an event listener `startButtonHandler()` to startButton.
-
 /**
  * EVENT HANDLERS
  */
+startButton.addEventListener("click", startButtonHandler);
+
 
 /**
  * Called when the start button is clicked.
@@ -84,8 +83,17 @@ padContainer.addEventListener("click", padHandler);
  *
  */
 function startButtonHandler() {
-  // TODO: Write your code here.
+ //setting the variable for how many rounds based on the level of the game. 
+ maxRoundCount = setLevel();
+ roundCount++;
 
+ //Hide start button and show status
+ startButton.classList.add("hidden");
+ statusSpan.classList.remove("hidden");
+
+ //the game starts with the computer's turn. 
+ playComputerTurn();
+ 
   return { startButton, statusSpan };
 }
 
@@ -140,7 +148,18 @@ function padHandler(event) {
  *
  */
 function setLevel(level = 1) {
-  // TODO: Write your code here.
+// using a switch to keep code clean and to more easily break 
+ switch (level) {
+  case 1:
+   return 8;
+  case 2:
+   return 14;
+  case 3:
+   return 20;
+  case 4:
+   return 31;
+  default:
+   return "Please enter level 1, 2, 3, or 4."
 }
 
 /**
