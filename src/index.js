@@ -6,7 +6,7 @@
  const startButton = document.querySelector(".js-start-button");
  const statusSpan = document.querySelector(".js-status"); // Use querySelector() to get the status element
  const heading = document.querySelector(".js-heading"); // Use querySelector() to get the heading element
- const padContainer = document.querySelector(".js-pad-container"); // Use querySelector() to get the heading element
+ const padContainer = document.querySelector(".js-pad-container"); // Use querySelector() to get the pad container element
  const levelSelect = document.querySelector(".js-level-select"); // Use querySelector to get the level select element
 
 /**
@@ -16,6 +16,7 @@ let computerSequence = []; // track the computer-generated sequence of pad press
 let playerSequence = []; // track the player-generated sequence of pad presses
 let maxRoundCount = 0; // the max number of rounds, varies with the chosen level
 let roundCount = 0; // track the number of rounds that have been played so far
+//Background music: loops quietly while a game is being played.
 const backgroundMusic = new Audio("./assets/background-music.mp3");
 backgroundMusic.loop = true;
 backgroundMusic.volume = .25;
@@ -167,7 +168,7 @@ function padHandler(event) {
  *
  */
 function setLevel(level = 1) {
-// using a switch to keep code clean and to more easily break 
+// Using a switch to map each level to its number of rounds. 
  switch (level) {
   case 1:
    return 8;
@@ -226,7 +227,7 @@ function setText(element, text) {
  */
 
 function activatePad(color) {
- //set variable
+ //find the pad object that matches the color.
 const pad = pads.find((pad) => pad.color === color);
  //light up the color pad
  pad.selector.classList.add("activated");
@@ -293,7 +294,7 @@ function activatePads(sequence) {
   computerSequence.push(color);
   activatePads(computerSequence);
   
-  setTimeout(() => playHumanTurn(roundCount), roundCount * 600 + 1000); // 5
+  setTimeout(() => playHumanTurn(roundCount), roundCount * 600 + 1000); //start the players turn 1 second after the sequence ends.
 }
 
 /**
@@ -385,7 +386,7 @@ function checkRound() {
  *
  * 2. Reset `playerSequence` to an empty array
  *
- * 3. Reset `roundCount` to an empty array
+ * 3. Reset `roundCount` to 0
  */
 function resetGame(text) {
   computerSequence = [];
