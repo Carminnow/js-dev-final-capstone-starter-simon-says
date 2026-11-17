@@ -393,7 +393,6 @@ function resetGame(text) {
   playerSequence = [];
   roundCount = 0;
   backgroundMusic.pause();
- //Uncomment the code below:
  
  alert(text);
   setText(heading, "Simon Says");
