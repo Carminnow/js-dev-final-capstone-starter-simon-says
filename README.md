@@ -1,4 +1,5 @@
 Carmino Says
+
 A neon arcade take on the classic memory game Simon Says, built with HTML, CSS and vanilla JavaScript.
 
 ▶ Play it live: https://carminnow.github.io/js-dev-final-capstone-starter-simon-says/
@@ -6,32 +7,59 @@ A neon arcade take on the classic memory game Simon Says, built with HTML, CSS a
 The computer lights up a sequence of colored pads, each with its own tone. Repeat the sequence from memory. Every round adds one more pad. Make a mistake and the game is over; clear every round to win.
 
 How to Play
+
 Choose a difficulty from the dropdown.
+
 Click Start.
+
 Watch and listen as the computer plays the sequence.
+
 When the status says it's your turn, click the pads in the same order.
+
 Get it right and the sequence grows by one. Get it wrong and the game resets.
-Level	Rounds to win
-1	8
-2	14
-3	20
-4	31
+
+Level : Rounds to win
+
+1:8
+
+2:14
+
+3:20
+
+4:31
+
+
 Features
-Four difficulty levels selectable before each game
-Original background music: a looping chiptune track that starts with the game and stops when it ends
-Sound and light feedback on every pad, for both the computer's turn and the player's
-Live status messages showing whose turn it is and how many presses are left
-Neon arcade look to match the game's arcade roots
+
+-Four difficulty levels selectable before each game
+
+-Original background music: a looping chiptune track that starts with the game and stops when it ends
+
+-Sound and light feedback on every pad, for both the computer's turn and the player's
+
+-Live status messages showing whose turn it is and how many presses are left
+
+-Neon arcade look to match the game's arcade roots
+
 Built With
-HTML5 for the game structure
-CSS3 for layout (CSS Grid) and styling
-JavaScript (ES6+) for the game logic, using DOM selection, event listeners, setTimeout timing and the Audio API
-Jest + Puppeteer for the automated tests
+
+-HTML5 for the game structure
+
+-CSS3 for layout (CSS Grid) and styling
+
+-JavaScript (ES6+) for the game logic, using DOM selection, event listeners, setTimeout timing and the Audio API
+
+-Jest + Puppeteer for the automated tests
+
+
 How It Works
+
 The game loops between two turns:
 
 Computer's turn (playComputerTurn): locks the pads, adds a random color to the sequence, and plays the whole sequence with a 600 ms gap between pads.
+
 Player's turn (playHumanTurn): unlocks the pads. Each click (padHandler) is checked against the computer's sequence (checkPress).
+
 When a round is completed (checkRound), the game either advances to the next round or declares a win. A wrong press or a win calls resetGame, which clears the game state and brings back the Start screen.
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------
