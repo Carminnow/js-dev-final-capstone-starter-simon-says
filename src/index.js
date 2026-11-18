@@ -8,6 +8,7 @@
  const heading = document.querySelector(".js-heading"); // Use querySelector() to get the heading element
  const padContainer = document.querySelector(".js-pad-container"); // Use querySelector() to get the pad container element
  const levelSelect = document.querySelector(".js-level-select"); // Use querySelector to get the level select element
+ const instructions = document.querySelector(".js-instructions"); // how to play tooltip
 
 /**
  * VARIABLES
@@ -105,6 +106,7 @@ function startButtonHandler() {
  startButton.classList.add("hidden");
  levelSelect.classList.add("hidden");
  statusSpan.classList.remove("hidden");
+ instructions.classList.add("hidden");
 
  //the game starts with the computer's turn. 
  playComputerTurn();
@@ -404,6 +406,7 @@ function resetGame(text) {
   startButton.classList.remove("hidden");
   levelSelect.classList.remove("hidden");
   statusSpan.classList.add("hidden");
+  instructions.classList.remove("hidden");
   padContainer.classList.add("unclickable");
 }
 
