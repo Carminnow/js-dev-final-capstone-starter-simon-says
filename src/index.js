@@ -345,7 +345,11 @@ function checkPress(color) {
  setText(statusSpan, `Player's turn: ${remainingPresses} presses left`);
 
  if (computerSequence[index] !== playerSequence[index]) {
-  resetGame("Oops, wrong pad. Game Over!");
+  padContainer.classList.add("unclickable"); //no more presses
+  padConstainer.classList.add("error");
+  statusSpan.classList.add("error");
+  setText(statusSpan, "Wrong pad!");
+  nextTurnTimer = setTimeout(() =>  resetGame("Oops, wrong pad. Game Over!"), 800);
   return;
  }
 
@@ -376,6 +380,8 @@ function checkRound() {
  } else {
   //lock the pads so clicks during the pause can't count as a round
   padContainer.classList.add("unclickable");
+  padContainer.classList.add("success");
+  statusSpan.classList.add("success");
   roundCount++;
   playerSequence = [];
   setText(statusSpan, "Nice, Keep going!");
@@ -408,6 +414,8 @@ function resetGame(text) {
   statusSpan.classList.add("hidden");
   instructions.classList.remove("hidden");
   padContainer.classList.add("unclickable");
+  padContainer.classList.remove("success", "error");
+  statusSpan.classList.remove("success", "error");
 }
 
 /**
