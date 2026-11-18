@@ -371,6 +371,8 @@ function checkRound() {
  if (playerSequence.length === maxRoundCount) {
   resetGame("You won! Congratulations!");
  } else {
+  //lock the pads so clicks during the pause can't count as a round
+  padContainer.classList.add("unclickable");
   roundCount++;
   playerSequence = [];
   setText(statusSpan, "Nice, Keep going!");
