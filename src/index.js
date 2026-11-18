@@ -288,6 +288,8 @@ function activatePads(sequence) {
  function playComputerTurn() {
 //locking the pads
   padContainer.classList.add("unclickable");
+  padContainer.classList.remove("success");
+  statusSpan.classList.remove("success");
 //add text to alert the player of what's happening  
   setText(statusSpan, "The computer's turn...");
   setText(heading, `Round ${roundCount} of ${maxRoundCount}`);
@@ -346,7 +348,7 @@ function checkPress(color) {
 
  if (computerSequence[index] !== playerSequence[index]) {
   padContainer.classList.add("unclickable"); //no more presses
-  padConstainer.classList.add("error");
+  padContainer.classList.add("error");
   statusSpan.classList.add("error");
   setText(statusSpan, "Wrong pad!");
   nextTurnTimer = setTimeout(() =>  resetGame("Oops, wrong pad. Game Over!"), 800);
