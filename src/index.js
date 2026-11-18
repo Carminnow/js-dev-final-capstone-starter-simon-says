@@ -9,14 +9,19 @@
  const padContainer = document.querySelector(".js-pad-container"); // Use querySelector() to get the pad container element
  const levelSelect = document.querySelector(".js-level-select"); // Use querySelector to get the level select element
  const instructions = document.querySelector(".js-instructions"); // how to play tooltip
+ const musicToggle = document.querySelector(".js-music-toggle"); //background music on/off button
+ const soundToggle = document.querySelector(".js-sound-toggle"); //pad sounds on/off button
 
 /**
  * VARIABLES
  */
+
 let computerSequence = []; // track the computer-generated sequence of pad presses
 let playerSequence = []; // track the player-generated sequence of pad presses
 let maxRoundCount = 0; // the max number of rounds, varies with the chosen level
 let roundCount = 0; // track the number of rounds that have been played so far
+let musicOn = true; //background music boolean
+let soundsOn = true; //pad sounds boolean
 //Background music: loops quietly while a game is being played.
 let nextTurnTimer; //the scheduled nextr turn so resetGame() can cancel it.
 const backgroundMusic = new Audio("./assets/background-music.mp3");
@@ -71,6 +76,8 @@ backgroundMusic.volume = .25;
 
 padContainer.addEventListener("click", padHandler);
 startButton.addEventListener("click", startButtonHandler);
+musicToggle.addEventListener("click", toggleMusic);
+soundToggle.addEventListener("click", toggleSounds);
 
 
 
@@ -390,6 +397,25 @@ function checkRound() {
   nextTurnTimer = setTimeout(() => playComputerTurn(), 1000);
  }
 
+}
+
+// Turns the background music on or off, and updates the button.
+function toggleMusic() {
+  musicOn = !musicOn;
+  backgroundMusic.muted = !musicOn;
+  musicToggle.textContent = musicOn ? "Music: On" : "Music: Off";
+  musicToggle.setAttribute("aria-pressed", musicOn);
+}
+
+
+ // Turns the pad sounds on or off, and updates the button.
+function toggleSounds() {
+  soundsOn = !soundsOn;
+  pads.forEach((pad) => {
+    pad.sound.muted = !soundsOn;
+  });
+  soundToggle.textContent = soundsOn ? "Sounds: On" : "Sounds: Off";
+  soundToggle.setAttribute("aria-pressed", soundsOn);
 }
 
 /**
