@@ -20,7 +20,7 @@ body {
 }
 
 main {
-  postiion: relative; /*Lets audio controls sit in the corner.*/
+  position: relative; /*Lets audio controls sit in the corner.*/
   background-color: #000;
   padding: 40px;
 }
