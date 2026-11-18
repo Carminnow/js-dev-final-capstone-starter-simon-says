@@ -116,7 +116,7 @@ I built the game one user story at a time and committed after each step:
 | 6 | **US-06** Originality | Difficulty dropdown, background music and dropdown styling |
 | 7 | **US-07** Deploy | GitHub Pages, sound path fix, README |
 
-After each step I checked the work in the browser, and against the project's tests where they applied, before moving on. I also kept a `USER_STORIES.md` file with each story's acceptance criteria written in Gherkin format and a running checklist.
+After each step I checked the work in the browser, and against the project's tests where they applied, before moving on. I also kept a file with each story's acceptance criteria written in Gherkin format and a running checklist.
 
 ---
 
@@ -228,7 +228,6 @@ npm run test:1    # one user story (1 to 5)
 - `src/styles.css`: the styling
 - `assets/`: sounds, music and images
 - `test/`: the automated tests
-- `USER_STORIES.md`: user stories, Gherkin acceptance criteria and the progress checklist
 
 **Acknowledgements:** starter code, pad sounds and tests provided by Thinkful.
 
@@ -314,7 +313,7 @@ After each story I played the game in the browser and checked that all 43 origin
 
 | Tool | What I used it for | Why |
 |---|---|---|
-| **Claude (Anthropic), via Claude Code** | Turning the grader's feedback into user stories, Gherkin acceptance criteria and a checklist (`ENHANCEMENTS.md`) | To plan the fixes like a real project |
+| **Claude (Anthropic), via Claude Code** | Turning the grader's feedback into user stories, Gherkin acceptance criteria and a checklist | To plan the fixes like a real project |
 | | Reproducing the reported bugs in a browser and finding their shared cause | To fix the source of the problem, not the symptoms |
 | | Explaining techniques the course hadn't covered (`@keyframes`, `translateX`, `drop-shadow`, `clearTimeout`) and comparing implementation options | To understand *why* each approach works before writing it |
 | | Building prototypes with screenshots before I wrote code | To see and choose between designs first |
