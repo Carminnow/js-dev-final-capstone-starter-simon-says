@@ -17,6 +17,7 @@ let playerSequence = []; // track the player-generated sequence of pad presses
 let maxRoundCount = 0; // the max number of rounds, varies with the chosen level
 let roundCount = 0; // track the number of rounds that have been played so far
 //Background music: loops quietly while a game is being played.
+let nextTurnTimer; //the scheduled nextr turn so resetGame() can cancel it.
 const backgroundMusic = new Audio("./assets/background-music.mp3");
 backgroundMusic.loop = true;
 backgroundMusic.volume = .25;
@@ -294,7 +295,7 @@ function activatePads(sequence) {
   computerSequence.push(color);
   activatePads(computerSequence);
   
-  setTimeout(() => playHumanTurn(roundCount), roundCount * 600 + 1000); //start the players turn 1 second after the sequence ends.
+ nextTurnTimer = setTimeout(() => playHumanTurn(roundCount), roundCount * 600 + 1000); //start the players turn 1 second after the sequence ends.
 }
 
 /**
@@ -376,7 +377,7 @@ function checkRound() {
   roundCount++;
   playerSequence = [];
   setText(statusSpan, "Nice, Keep going!");
-  setTimeout(() => playComputerTurn(), 1000);
+  nextTurnTimer = setTimeout(() => playComputerTurn(), 1000);
  }
 
 }
@@ -391,6 +392,7 @@ function checkRound() {
  * 3. Reset `roundCount` to 0
  */
 function resetGame(text) {
+ clearTimeout(nextTurnTimer); //stop any turn that was scheduled before game end.
   computerSequence = [];
   playerSequence = [];
   roundCount = 0;
