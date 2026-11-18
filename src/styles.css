@@ -126,6 +126,40 @@ h1 {
   display: block;
 }
 
+/* Feedback: a green glow when a round is completed */
+@keyframes success-glow {
+  0%, 100% { filter: drop-shadow(0 0 0 transparent); }
+  50% { filter: drop-shadow(0 0 30px greenyellow) brightness(1.15); }
+}
+
+.pad-container.success {
+  animation: success-glow 0.5s ease-in-out 2;
+}
+
+/* Feedback: a red glow and a shake on a wrong press */
+@keyframes error-shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-14px); }
+  40%, 80% { transform: translateX(14px); }
+}
+
+.pad-container.error {
+  animation: error-shake 0.4s ease-in-out;
+  filter: drop-shadow(0 0 30px red) grayscale(0.4);
+}
+
+.status.success {
+  color: greenyellow;
+  font-size: 26px;
+  text-shadow: 0 0 10px greenyellow;
+}
+
+.status.error {
+  color: #ff4040;
+  font-size: 26px;
+  text-shadow: 0 0 10px red;
+}
+
 .status {
   font-size: 22px;
 }
