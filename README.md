@@ -231,3 +231,107 @@ npm run test:1    # one user story (1 to 5)
 - `USER_STORIES.md`: user stories, Gherkin acceptance criteria and the progress checklist
 
 **Acknowledgements:** starter code, pad sounds and tests provided by Thinkful.
+
+-----------------------------------------------------------------------------------------------------------------------------------------
+
+## Round 2: Improvements After Grader Feedback
+
+After my first submission, the grading team asked for two required fixes and suggested three optional improvements:
+
+| Feedback | Type | What I did |
+|---|---|---|
+| Pads still accept clicks during "Nice, keep going!" | **Required** | **US-08:** lock the pads the moment a round is completed |
+| Pads are clickable before the game starts | **Required** | **US-09:** cancel scheduled turns when the game resets |
+| Add instructions for first-time players | Optional | **US-10:** a "?" button with a How to play tooltip |
+| Make right and wrong feedback more noticeable | Optional | **US-11:** a green glow for a completed round, and a red shake for a wrong press |
+| Control music and sound effects separately | Optional | **US-12:** Music and Sounds on/off buttons |
+
+I planned this round the same way as the first: I wrote each item as a user story with Gherkin acceptance criteria and a checklist.
+
+### Investigating the bugs first
+
+Before changing any code, I reproduced both required issues in the browser to find the real cause:
+
+| What I tried | What happened |
+|---|---|
+| Clicked a pad on a fresh page, before Start | Nothing happened. The pads start locked. |
+| Clicked a pad during the "Nice, Keep going!" pause | Each click counted as a whole completed round. `roundCount` jumped to 3 while the heading still said "Round 1". |
+| Pressed a wrong pad during that pause | The game ended, but the computer's next turn was already scheduled and ran 1 second later. On the start screen it showed **"Round 0 of 8"** and **unlocked the pads**. |
+
+So both reported problems came from the same gap:
+1. `checkRound()` never locked the pads during its 1-second pause.
+2. `resetGame()` never cancelled timers that were already scheduled.
+
+The "clickable before the game starts" issue was a ghost turn left over from the previous game.
+
+### New variables and functions
+
+| Name | Purpose |
+|---|---|
+| `nextTurnTimer` | Holds the ID of the next scheduled turn, so `resetGame()` can cancel it with `clearTimeout()` |
+| `instructions` | The How to play tooltip, hidden during a game |
+| `musicOn` / `soundsOn` | Whether the music and pad sounds are switched on |
+| `toggleMusic()` | Flips `musicOn`, mutes or unmutes `backgroundMusic`, and updates its button |
+| `toggleSounds()` | Flips `soundsOn`, mutes or unmutes all four pad sounds, and updates its button |
+| `success` / `error` CSS classes | Trigger the `success-glow` and `error-shake` animations on the board and status text |
+
+### Implementation order
+
+| Story | Change | Commits |
+|---|---|---|
+| US-08 | One line in `checkRound()`: `padContainer.classList.add("unclickable")`, before the pause | [`eacc40a`](https://github.com/Carminnow/js-dev-final-capstone-starter-simon-says/commit/eacc40a) |
+| US-09 | Save each turn's `setTimeout` ID in `nextTurnTimer`, and `clearTimeout(nextTurnTimer)` at the start of `resetGame()` | [`94a792c`](https://github.com/Carminnow/js-dev-final-capstone-starter-simon-says/commit/94a792c) |
+| US-10 | "?" button and tooltip (HTML), floating panel shown on hover or focus (CSS), hidden during a game (JS) | [`92b9d06`](https://github.com/Carminnow/js-dev-final-capstone-starter-simon-says/commit/92b9d06), [`d969744`](https://github.com/Carminnow/js-dev-final-capstone-starter-simon-says/commit/d969744), [`dec0876`](https://github.com/Carminnow/js-dev-final-capstone-starter-simon-says/commit/dec0876) |
+| US-11 | `@keyframes` animations (CSS). JS adds `success` and `error` at the right moments, and delays the game-over alert by 800 ms. | [`7e33836`](https://github.com/Carminnow/js-dev-final-capstone-starter-simon-says/commit/7e33836), [`184907d`](https://github.com/Carminnow/js-dev-final-capstone-starter-simon-says/commit/184907d), [`1940f6d`](https://github.com/Carminnow/js-dev-final-capstone-starter-simon-says/commit/1940f6d) |
+| US-12 | Two toggle buttons in the corner of the game box, using the audio `.muted` property | [`cd20ba7`](https://github.com/Carminnow/js-dev-final-capstone-starter-simon-says/commit/cd20ba7), [`9be3ce3`](https://github.com/Carminnow/js-dev-final-capstone-starter-simon-says/commit/9be3ce3), [`bf44212`](https://github.com/Carminnow/js-dev-final-capstone-starter-simon-says/commit/bf44212), [`ce9d02c`](https://github.com/Carminnow/js-dev-final-capstone-starter-simon-says/commit/ce9d02c) |
+
+After each story I played the game in the browser and checked that all 43 original test checks still passed.
+
+### Trade-offs in this round
+
+- **Cancelling timers instead of adding guards.** The quick fix would have been `if (roundCount === 0) return;` at the top of `playHumanTurn()` and `playComputerTurn()`. But the original tests call those functions directly on a fresh page, where `roundCount` is 0, so that would have failed them. Cancelling the scheduled turn in `resetGame()` fixes the bug without changing how those functions behave.
+- **One timer variable.** After the US-08 fix, only one turn is ever waiting at a time, so a single `nextTurnTimer` covers both the player's turn and the computer's next turn. US-11's delayed game over reuses it too.
+- **A hover tooltip instead of a collapsible panel.** My page already had `overflow: hidden` and was 7px too tall for a common laptop window, so anything that grew the layout would push the pads off screen. I compared a collapsible `<details>` panel with a floating tooltip and chose the tooltip, because it floats over the board and doesn't change the layout. The downside: a "?" is less obvious than a "How to play" heading, and on touch screens it has to be tapped.
+- **An 800 ms delay before the game-over alert.** `alert()` freezes the page, so an animation started right before it would never be seen. The delay makes the error effect visible, but the game ends slightly later.
+- **`.muted` instead of `if` statements.** Muting the audio objects meant I didn't have to change any code that plays sounds. The original tests check for the exact text `pad.sound.play()`, so leaving those lines alone kept them passing, and the music resumes naturally when it's switched back on.
+
+### Challenges and debugging in this round
+
+| Problem | How it showed up | Cause | Fix | Commit |
+|---|---|---|---|---|
+| Clicks during the pause skipped rounds | `roundCount` jumped while the heading stayed on "Round 1" | Pads stayed unlocked during `checkRound()`'s 1-second pause | Lock the pads at the start of the pause | [`eacc40a`](https://github.com/Carminnow/js-dev-final-capstone-starter-simon-says/commit/eacc40a) |
+| Ghost turn after a game over | "Round 0 of 8" and unlocked pads on the start screen | A scheduled `setTimeout` still fired after `resetGame()` | `clearTimeout(nextTurnTimer)` in `resetGame()`. I confirmed it by calling `resetGame()` from the console mid-sequence, before and after the fix. | [`94a792c`](https://github.com/Carminnow/js-dev-final-capstone-starter-simon-says/commit/94a792c) |
+| Feedback effects never appeared | No glow or shake at all | My first US-11 commit only included the CSS. The JavaScript that adds the classes wasn't committed. | Committed the JS changes | [`184907d`](https://github.com/Carminnow/js-dev-final-capstone-starter-simon-says/commit/184907d) |
+| **A wrong press froze the game** | Pads locked, no alert, no Start button. The console showed `padConstainer is not defined`. | Typo: `padConstainer` | Fixed the spelling | [`1940f6d`](https://github.com/Carminnow/js-dev-final-capstone-starter-simon-says/commit/1940f6d) |
+| Green glow only played in round 1 | The `success` class stayed on, so adding it again did nothing | A CSS animation only replays when its class is newly added | Remove `success` at the start of each computer turn | [`1940f6d`](https://github.com/Carminnow/js-dev-final-capstone-starter-simon-says/commit/1940f6d) |
+| Audio buttons in the wrong corner | Positioned against the browser window instead of the game box | Typo `postiion: relative` on `main`. Without a positioned parent, `position: absolute` uses the whole page. | Fixed the spelling to `position` | [`bf44212`](https://github.com/Carminnow/js-dev-final-capstone-starter-simon-says/commit/bf44212) |
+
+**What I took from this round:**
+- Reproducing a bug before fixing it showed me that the two reported issues had one cause, so I fixed the source rather than the symptoms.
+- The `padConstainer` typo was the same kind of bug as my first round's `computersequence` and `rountCount`. A syntax check can't catch it, but the browser console shows it the moment that line runs.
+
+### AI tools used in this round
+
+| Tool | What I used it for | Why |
+|---|---|---|
+| **Claude (Anthropic), via Claude Code** | Turning the grader's feedback into user stories, Gherkin acceptance criteria and a checklist (`ENHANCEMENTS.md`) | To plan the fixes like a real project |
+| | Reproducing the reported bugs in a browser and finding their shared cause | To fix the source of the problem, not the symptoms |
+| | Explaining techniques the course hadn't covered (`@keyframes`, `translateX`, `drop-shadow`, `clearTimeout`) and comparing implementation options | To understand *why* each approach works before writing it |
+| | Building prototypes with screenshots before I wrote code | To see and choose between designs first |
+| | Reviewing each commit, finding the `padConstainer` freeze and the missing class removal, and re-running the 43 original test checks | To catch bugs quickly and confirm nothing broke |
+| | Capturing the screenshots below and drafting this section, which I reviewed and edited | To document the round clearly |
+
+### Round 2 summary
+
+- **Process:** I turned the grader's feedback into five user stories and reproduced the bugs before changing any code. That showed that both required issues came from one gap: pads left unlocked during the round pause, and scheduled turns that `resetGame()` never cancelled.
+- **Challenges:** Several techniques were new to me, including CSS animations, timers I could cancel, and accessible toggles. Working through options with Claude before coding helped me choose approaches that also kept the original tests passing. A typo froze the game once, and the browser console found it immediately.
+- **Result:** Both required fixes work, and all three optional suggestions are added: a How to play tooltip, clearer success and error feedback, and separate music and sound controls. All 43 original test checks still pass.
+
+### Round 2 screenshots
+
+| Feature | Screenshot |
+|---|---|
+| **How to play tooltip (US-10):** hovering or focusing the "?" shows instructions over the board, without changing the layout | [How to play tooltip showing the four steps and the levels]<img width="1280" height="760" alt="image" src="https://github.com/user-attachments/assets/af676d9e-1681-4930-88bc-7f83ebcb3c9c" /> |
+| **Success feedback (US-11):** completing a round makes the board glow green, and the pads lock straight away (US-08) | [Round 2 of 14 completed: the board glows green and "Nice, Keep going!" shows]<img width="1280" height="760" alt="image" src="https://github.com/user-attachments/assets/825c8997-75aa-4be1-b536-6c8a6916e374" /> |
+| **Error feedback (US-11):** a wrong press shakes the board and turns it red before the game-over alert | [A wrong press: red glow, faded pads and "Wrong pad!"]<img width="1280" height="760" alt="image" src="https://github.com/user-attachments/assets/9ca1ebc4-129e-44c9-9cfb-cc114e394be7" /> |
+| **Audio controls (US-12):** Music and Sounds can each be switched off, even mid-game | [Round 3 of 14 with Music and Sounds both switched off]<img width="1280" height="760" alt="image" src="https://github.com/user-attachments/assets/1aea7aff-277b-4542-ad5c-f44c896dec14" /> |
