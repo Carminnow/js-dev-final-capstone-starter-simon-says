@@ -22,6 +22,7 @@ let maxRoundCount = 0; // the max number of rounds, varies with the chosen level
 let roundCount = 0; // track the number of rounds that have been played so far
 let musicOn = true; //background music boolean
 let soundsOn = true; //pad sounds boolean
+let acceptingInput = false; // true only while the game is waiting for the player's presses
 //Background music: loops quietly while a game is being played.
 let nextTurnTimer; //the scheduled nextr turn so resetGame() can cancel it.
 const backgroundMusic = new Audio("./assets/background-music.mp3");
@@ -141,7 +142,7 @@ function startButtonHandler() {
 function padHandler(event) {
  const { color } = event.target.dataset;
  if (!color) return;
-
+if (!acceptingInput) return; // ignore presses outside the player's turn
  const pad = pads.find((pad) => pad.color === color);
  pad.selector.classList.add("activated");
  setTimeout(() => {
@@ -294,6 +295,7 @@ function activatePads(sequence) {
  */
  function playComputerTurn() {
 //locking the pads
+  acceptingInput = false;
   padContainer.classList.add("unclickable");
   padContainer.classList.remove("success");
   statusSpan.classList.remove("success");
@@ -319,6 +321,7 @@ function activatePads(sequence) {
 function playHumanTurn() {
  //remove unclickable.
  padContainer.classList.remove("unclickable");
+ acceptingInput = true; // the sequence has finished: now the player may respond
  //set variable for how many presses remain. 
  const remainingPresses = computerSequence.length - playerSequence.length;
  //tell the player how many presses they have.
@@ -354,6 +357,7 @@ function checkPress(color) {
  setText(statusSpan, `Player's turn: ${remainingPresses} presses left`);
 
  if (computerSequence[index] !== playerSequence[index]) {
+  acceptingInput = false;
   padContainer.classList.add("unclickable"); //no more presses
   padContainer.classList.add("error");
   statusSpan.classList.add("error");
@@ -388,6 +392,7 @@ function checkRound() {
   resetGame("You won! Congratulations!");
  } else {
   //lock the pads so clicks during the pause can't count as a round
+  acceptingInput = false;
   padContainer.classList.add("unclickable");
   padContainer.classList.add("success");
   statusSpan.classList.add("success");
@@ -428,13 +433,14 @@ function toggleSounds() {
  * 3. Reset `roundCount` to 0
  */
 function resetGame(text) {
- clearTimeout(nextTurnTimer); //stop any turn that was scheduled before game end.
+  clearTimeout(nextTurnTimer); //stop any turn that was scheduled before game end.
+  acceptingInput = false;
   computerSequence = [];
   playerSequence = [];
   roundCount = 0;
   backgroundMusic.pause();
  
- alert(text);
+  alert(text);
   setText(heading, "Simon Says");
  
   startButton.classList.remove("hidden");
